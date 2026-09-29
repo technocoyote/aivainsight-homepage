@@ -1,0 +1,11 @@
+const header=document.querySelector('.site-header');
+const toggle=document.querySelector('.nav-toggle');
+const nav=document.querySelector('.site-nav');
+const year=document.querySelector('#year');
+year.textContent=new Date().getFullYear();
+window.addEventListener('scroll',()=>header.classList.toggle('scrolled',window.scrollY>20));
+toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',open);document.body.classList.toggle('nav-open',open)});
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');document.body.classList.remove('nav-open')}));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.querySelector('#contact-form').addEventListener('submit',e=>{e.preventDefault();const data=new FormData(e.currentTarget);const name=`${data.get('firstName')} ${data.get('lastName')}`;const subject=encodeURIComponent(`Yhteydenotto Aiva Insightin verkkosivulta: ${name}`);const body=encodeURIComponent(`Nimi: ${name}\nSähköposti: ${data.get('email')}\nPuhelin: ${data.get('phone')||'-'}\n\nViesti:\n${data.get('message')}`);window.location.href=`mailto:info@aivainsight.fi?subject=${subject}&body=${body}`;document.querySelector('#form-note').textContent='Sähköpostiohjelma avataan viestin lähettämistä varten.'});
